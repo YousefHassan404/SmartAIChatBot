@@ -8,8 +8,11 @@ import dotenv from "dotenv";
 dotenv.config(); // تحميل المتغيرات من .env
 
 const app = express();
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+
 const PAGE_ACCESS_TOKEN =
   "EAAN2h5lZBP9YBO8rpvOk6DmzpMIWqVZBPv3z7ZBmpGcfd6Fs7FpvCKXLrbEV0uC27L0ITv3ctlPX3SfNAi9rNPISevt7YzWBiw1ZB9BeFIeEZAhJtVHTnRckWXfjMlz5eXC7dJixpp4exB8yCxC2eQxcjfYWnq3uaT6KwkcpDZApuou962UvzsqGfYrimcKc1pywZDZD";
 
@@ -124,9 +127,9 @@ app.use("/setup", async (req, res) => {
 });
 
 // Run server
-// const PORT = process.env.PORT || 3000;
-// app.listen(PORT, () => {
-//   console.log(`🚀 Server running on port ${PORT}`);
-// });
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
 
 export default app;
