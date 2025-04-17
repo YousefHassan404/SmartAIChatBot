@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename);
 
 
 const PAGE_ACCESS_TOKEN =
-  "EAAN2h5lZBP9YBO8rpvOk6DmzpMIWqVZBPv3z7ZBmpGcfd6Fs7FpvCKXLrbEV0uC27L0ITv3ctlPX3SfNAi9rNPISevt7YzWBiw1ZB9BeFIeEZAhJtVHTnRckWXfjMlz5eXC7dJixpp4exB8yCxC2eQxcjfYWnq3uaT6KwkcpDZApuou962UvzsqGfYrimcKc1pywZDZD";
+  "EAAJkr4dHOuMBO6n4o8pt4UlXHMqg8KUusrV9Q9AZB4psh24zoffvW7sod2P3ZBcJGGx9qdup4YuJuVxapf5cLhD0TyUiXpLoTubfgX2LBcA2BneqBJzBLeZAZB8N2qmEmlvygZB71t80LLwOKngWAJtgxd3OwjtM542T3NJfvGEh70AqpGg3jicZARYYDxdpSatAZDZD";
 
 const graph_api = `https://graph.facebook.com/v7.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`;
 
