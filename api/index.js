@@ -13,9 +13,7 @@ const __dirname = path.dirname(__filename);
 const PAGE_ACCESS_TOKEN =
   "EAAN2h5lZBP9YBO8rpvOk6DmzpMIWqVZBPv3z7ZBmpGcfd6Fs7FpvCKXLrbEV0uC27L0ITv3ctlPX3SfNAi9rNPISevt7YzWBiw1ZB9BeFIeEZAhJtVHTnRckWXfjMlz5eXC7dJixpp4exB8yCxC2eQxcjfYWnq3uaT6KwkcpDZApuou962UvzsqGfYrimcKc1pywZDZD";
 
-  const graph_api =
-  `https://graph.facebook.com/v7.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`;
-
+const graph_api = `https://graph.facebook.com/v7.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`;
 
 // Middleware
 app.use(bodyParser.json());
@@ -47,42 +45,81 @@ app.get("/webhook", (req, res) => {
   }
 });
 
-app.use("/setup", async (req, res) => {
+
+
+// Helpers
+async function setupGetStartedButton() {
+  const data = {
+    get_started: {
+      payload: "GET_STARTED_PAYLOAD",
+    },
+  };
+
+  await axios.post(graph_api, data, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}
+
+async function setupGreetingText() {
+     // var data= {
+    //     "get_started": {
+    //         "payload": "GET_STARTED_PAYLOAD"
+    //     },
+    //     "greeting": [
+    //         {
+    //             "locale": "default",
+    //             "text": "Hello {{user_first_name}}!"
+    //         }
+    //     ],
+    //     "persistent_menu": [
+    //         {
+    //             "locale": "default",
+    //             "composer_input_disabled": false,
+    //             "call_to_actions": [
+    //                 {
+    //                     "title": "Start",
+    //                     "type": "postback",
+    //                     "payload": "START_PAYLOAD"
+    //                 },
+    //                 {
+    //                     "title": "Help",
+    //                     "type": "postback",
+    //                     "payload": "HELP_PAYLOAD"
+    //                 }
+    //             ]
+    //         }
+    //     ]
+    // }
   const data = {
     greeting: [
       {
         locale: "default",
-        text: "Hello {{user_first_name}}!"
+        text: "Hello {{user_first_name}}!",
       },
       {
         locale: "ar_AR",
-        text: "مرحبا {{user_first_name}}!"
-      }
-    ]
+        text: "مرحبا {{user_first_name}}!",
+      },
+    ],
   };
 
-  try {
-    const response = await axios.post(graph_api, data, {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
+  await axios.post(graph_api, data, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}
 
-    console.log("✅ Setup completed successfully.");
+app.use("/setup", async (req, res) => {
+  try {
+    await setupGetStartedButton();
+    await setupGreetingText();
     res.status(200).send("Setup completed successfully.");
   } catch (error) {
-    if (error.response) {
-      console.error("❌ Facebook API Error:", error.response.data);
-      res
-        .status(error.response.status)
-        .send(`Facebook API Error: ${JSON.stringify(error.response.data)}`);
-    } else if (error.request) {
-      console.error("❌ No response received from Facebook API");
-      res.status(500).send("No response received from Facebook API.");
-    } else {
-      console.error("❌ Error in request:", error.message);
-      res.status(500).send("Error in request: " + error.message);
-    }
+    console.error("❌ Error during setup:", error);
+    res.status(500).send("Error during setup: " + error.message);
   }
 });
 
