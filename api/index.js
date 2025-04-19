@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 app.get("/", (req, res) => {
-  res.send("No Risk No Fun Yaaa Maجdy 😂");
+  res.send("Server Side of Agency Chatbot");
 });
 
 app.get("/privacy", (req, res) => {
