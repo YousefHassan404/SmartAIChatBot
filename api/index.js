@@ -4,6 +4,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
+import Message from "./models/message.js";
 
 dotenv.config(); // تحميل المتغيرات من .env
 
@@ -16,6 +18,18 @@ const PAGE_ACCESS_TOKEN =
   "EAAN2h5lZBP9YBO8dbkNYYML9b3oWiVANqsAOczSfDob1jKpZA000m7SCG4rVUpKYTxeZBZCuzj4SwsZCKZBLPA6ZB8f0pZCAeA9GWMcJjY7JLBWlb1Lx9yuq5AANmhAdLtzzAeZCpbzkArhl4yPARNtbHp7fKZCZANu5OLsstXnXYdTCqJMR3W9OvdheXsV8Yi8ZBp6rtTpL0G0O2CfZCf0MA4rkhMhkZD";
 
 const graph_api = `https://graph.facebook.com/v7.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`;
+
+
+mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/chatbot", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+mongoose.connection.on("connected", () => {
+  console.log("✅ Connected to MongoDB");
+});
+mongoose.connection.on("error", (err) => {
+  console.error("❌ MongoDB connection error:", err);
+});
 
 // Middleware
 app.use(bodyParser.json());
@@ -80,66 +94,63 @@ app.post("/webhook", function (req, res) {
   }
 });
 
-function receivedMessage(event) {
-  var senderId = event.sender.id; // ID of the user who sent the message
-  var messageText = event.message.text; // Text content of the message
+async function receivedMessage(event) {
+  const senderId = event.sender.id;
+  const messageText = event.message.text;
 
-  // Handle the message based on its content
-  switch (
-    messageText.toLowerCase() // Convert to lowercase for case-insensitive matching
-  ) {
+  // Save to DB
+  const messageDoc = new Message({
+    senderId,
+    recipientId: event.recipient.id,
+    messageType: "text",
+    messageText,
+  });
+  await messageDoc.save();
+
+  // Respond
+  switch (messageText.toLowerCase()) {
     case "hi":
-      var msg = "You sent 'Hi'. How are you?";
-      sendTextMessage(senderId, msg);
+      sendTextMessage(senderId, "You sent 'Hi'. How are you?");
       break;
     case "help":
-      var msg = "Sure, I'm here to help! What can I assist you with?";
-      sendTextMessage(senderId, msg);
+      sendTextMessage(senderId, "Sure, I'm here to help! What can I assist you with?");
       break;
     default:
-      var msg =
-        "I'm not sure how to respond to that. Try saying 'Hi' or 'Help'.";
-      sendTextMessage(senderId, msg);
+      sendTextMessage(senderId, "I'm not sure how to respond to that. Try saying 'Hi' or 'Help'.");
       break;
   }
 }
 
-function receivedPostback(event) {
-  var senderId = event.sender.id;
-  var payload = event.postback.payload;
 
+async function receivedPostback(event) {
+  const senderId = event.sender.id;
+  const payload = event.postback.payload;
+
+  // Save to DB
+  const messageDoc = new Message({
+    senderId,
+    recipientId: event.recipient.id,
+    messageType: "postback",
+    postbackPayload: payload,
+  });
+  await messageDoc.save();
+
+  // Respond
   switch (payload) {
     case "GET_STARTED_PAYLOAD":
-      var msg = "Welcome in this chatbot! How can I help you?";
-      sendTextMessage(senderId, msg);
+      sendTextMessage(senderId, "Welcome in this chatbot! How can I help you?");
       break;
-
     case "PAYLOAD1":
-      var msg = "Talk to an agent";
-      sendTextMessage(senderId, msg);
+      sendTextMessage(senderId, "Talk to an agent");
       break;
-
     case "PAYLOAD2":
-      var msg = "Outfit suggestions";
-      sendTextMessage(senderId, msg);
+      sendTextMessage(senderId, "Outfit suggestions");
       break;
-
     default:
-      var msg = "Handle this postback";
-      sendTextMessage(senderId, msg);
+      sendTextMessage(senderId, "Handle this postback");
       break;
   }
 }
-
-function sendTextMessage(recipientId, msg) {
-  var data = {
-    recipient: {
-      id: recipientId,
-    },
-    message: {
-      text: msg,
-    },
-  };
 
   // Send the message using axios
   axios
