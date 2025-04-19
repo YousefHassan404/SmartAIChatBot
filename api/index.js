@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PAGE_ACCESS_TOKEN =
-  "EAAN2h5lZBP9YBOZCgqyfrOrZCbQcwFfI5tHMRvcAzf4JpcPZB4dzXhAOcghzSyXHdDD4cEqZB63ADF141VtZBCcHVoj0YmWaEyqB7pNNeZCiKVUDZC6Gv2Vy8ykxUacNvoudTSpaa93YWT3KEdkJpzMb9u9fSOoHeNDDJ15Ev9fjJZBhzZC51rGSPBWSmaeu6FE6mm6AZDZD";
+  "EAAN2h5lZBP9YBO8dbkNYYML9b3oWiVANqsAOczSfDob1jKpZA000m7SCG4rVUpKYTxeZBZCuzj4SwsZCKZBLPA6ZB8f0pZCAeA9GWMcJjY7JLBWlb1Lx9yuq5AANmhAdLtzzAeZCpbzkArhl4yPARNtbHp7fKZCZANu5OLsstXnXYdTCqJMR3W9OvdheXsV8Yi8ZBp6rtTpL0G0O2CfZCf0MA4rkhMhkZD";
 
 const graph_api = `https://graph.facebook.com/v7.0/me/messenger_profile?access_token=${PAGE_ACCESS_TOKEN}`;
 
