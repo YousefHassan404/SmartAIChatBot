@@ -5,7 +5,6 @@ import { fileURLToPath } from "url";
 import axios from "axios";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-// import Message from "./models/message.js";
 import Message from "../models/message.js"; // تأكد من المسار الصحيح لنموذج الرسالة
 dotenv.config(); // تحميل المتغيرات من .env
 
