@@ -121,7 +121,6 @@ async function receivedMessage(event) {
   }
 }
 
-
 async function receivedPostback(event) {
   const senderId = event.sender.id;
   const payload = event.postback.payload;
@@ -152,27 +151,6 @@ async function receivedPostback(event) {
   }
 }
 
-  // Send the message using axios
-  axios
-    .post(
-      `https://graph.facebook.com/v7.0/me/messages?access_token=${PAGE_ACCESS_TOKEN}`,
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-    .then((response) => {
-      console.log("Message sent successfully:", response.data);
-    })
-    .catch((error) => {
-      console.error(
-        "Error sending message:",
-        error.response ? error.response.data : error.message
-      );
-    });
-}
 
 // Helpers
 async function setuppersistent_menu() {
